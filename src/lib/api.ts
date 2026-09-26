@@ -28,7 +28,9 @@ interface ApiFailure {
   errors: { field: string; message: string }[];
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api/v1";
+export const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL ?? "http://3.129.144.39/api/v1"
+).replace(/\/$/, "");
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {

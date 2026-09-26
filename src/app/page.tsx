@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
+  API_URL,
   Employee,
   EmployeeInput,
   createEmployee,
@@ -69,7 +70,7 @@ export default function Home() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [form, setForm] = useState<EmployeeInput>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,7 +88,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    loadEmployees();
+    void getEmployees()
+      .then(setEmployees)
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "Error al cargar empleados");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const resetForm = () => {
@@ -172,7 +178,7 @@ export default function Home() {
               <p className="text-sm text-slate-500">
                 API:{" "}
                 <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">
-                  {process.env.NEXT_PUBLIC_API_URL}
+                  {API_URL}
                 </code>
               </p>
             </div>
